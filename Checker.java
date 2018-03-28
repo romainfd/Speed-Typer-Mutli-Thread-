@@ -9,11 +9,9 @@ public class Checker extends Thread {
     final String app_id = "918d8af1";
     final String app_key = "c1a5df723a97384087fa26e3d24a0a6e";
 	String word;
-	Writer writer;
 	
-	public Checker(String word, Writer writer) {
+	public Checker(String word) {
 		this.word = word;
-		this.writer = writer;
 	}
 
 	@Override
@@ -36,20 +34,20 @@ public class Checker extends Thread {
 	                stringBuilder.append(line + "\n");
 	            }
 	            //System.out.println(stringBuilder.toString());
-	            writer.outputWrite(this.word + " existe");
+	            Writer.outputWrite(this.word + " existe");
 	            try {
-	            	writer.scoreLock.lock();
-	            	writer.score.setText("" +(Integer.parseInt(writer.score.getText()) + this.word.length()));
+	            	Writer.scoreLock.lock();
+	            	Writer.score.setText("" +(Integer.parseInt(Writer.score.getText()) + this.word.length()));
 	            } finally {
-	            	writer.scoreLock.unlock();
+	            	Writer.scoreLock.unlock();
 	            }
             } catch (java.io.FileNotFoundException e) {
-            	writer.outputWrite(this.word+ " n'existe pas");
+            	Writer.outputWrite(this.word+ " n'existe pas");
 	            try {
-	            	writer.scoreLock.lock();
-	            	writer.score.setText("" +(Integer.parseInt(writer.score.getText()) - this.word.length()));
+	            	Writer.scoreLock.lock();
+	            	Writer.score.setText("" +(Integer.parseInt(Writer.score.getText()) - this.word.length()));
 	            } finally {
-	            	writer.scoreLock.unlock();
+	            	Writer.scoreLock.unlock();
 	            }
             }
 

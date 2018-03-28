@@ -6,12 +6,13 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class Writer extends JPanel implements ActionListener {
-    protected JTextField inputField;
+    protected static JTextField inputField;
     // On pourrait éventuellement le remplacer par un documentListener pour permettre de modifier les modifications du texte déjà taper et pas juste regarder le dernier mot tapé avant un espace
-    protected JTextArea outputField;
-    protected JTextField score;
-    protected ReentrantLock scoreLock = new ReentrantLock(); // pour modifier le score !
-    protected JTextField time;
+    protected static JTextArea outputField;
+    protected static JTextField score;
+    protected static ReentrantLock scoreLock = new ReentrantLock(); // pour modifier le score !
+    protected static JTextField time;
+    protected static JButton button;
     private final static String newline = "\n";
 
     public Writer() {
@@ -19,7 +20,7 @@ public class Writer extends JPanel implements ActionListener {
 
         inputField = new JTextField(20);
         inputField.setEditable(false);  // tant que le timer n'est pas lancé, on ne peut rien faire
-        Writer writer = this; // pour le passer au Checker
+
         // On écoute l'appui sur la touche espace
         InputMap imap = inputField.getInputMap(JComponent.WHEN_FOCUSED);
         imap.put(KeyStroke.getKeyStroke("SPACE"), "spaceAction");
@@ -41,7 +42,7 @@ public class Writer extends JPanel implements ActionListener {
             	}
             	String word = text.substring(i, iFin);
                 // System.out.println("Space Pressed: " + word);
-                Checker checker = new Checker(word, writer);
+                Checker checker = new Checker(word);
                 checker.start();
             }
         });
@@ -58,6 +59,8 @@ public class Writer extends JPanel implements ActionListener {
         time.setText("0");
         time.setEditable(false);
         
+        button = new JButton("Go !");
+        
         //Add Components to this panel.
         GridBagConstraints c = new GridBagConstraints();
         c.gridwidth = GridBagConstraints.REMAINDER;
@@ -66,14 +69,22 @@ public class Writer extends JPanel implements ActionListener {
         add(inputField, c);        
         add(score, c);
         add(time, c);
-
+        
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
         c.weighty = 1.0;
         add(scrollPane, c);
+        
+        // Ajout du bouton et écoute
+        this.add(button);
+        button.addActionListener(this);
     }
 
     public void actionPerformed(ActionEvent evt) {
+    	if (evt.getSource() == button) { // Appui sur le bouton
+    		EventDispatcher.setGo(true);
+    		// va lancer les Checker et le Timer
+    	}
         String text = inputField.getText();
         outputField.append(text + newline);
         inputField.selectAll();
@@ -86,7 +97,7 @@ public class Writer extends JPanel implements ActionListener {
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
-     * event dispatch thread.
+     * event dispatch thread
      */
     protected static Writer createAndShowGUI() {
         //Create and set up the window.
@@ -108,7 +119,7 @@ public class Writer extends JPanel implements ActionListener {
      * Affiche dans la fenetre d'output la chaine str
      * @param str
      */
-    public void outputWrite(String str) {
-    	this.outputField.append(str+newline);
+    public static void outputWrite(String str) {
+    	outputField.append(str+newline);
     }
 }
