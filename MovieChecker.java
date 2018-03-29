@@ -24,7 +24,7 @@ public class MovieChecker extends Thread{
 			}
 			if(EventDispatcher.movies.get(j).equals(wordTest)) {
 					System.out.println("Bingo");
-	            	Writer.outputField.write(this.query, Color.BLUE);
+	            	// Writer.outputField.write(this.query, Color.BLUE);
 			}
 			if(wordTest.indexOf(EventDispatcher.movies.get(j))!=0) return;
 			
