@@ -18,7 +18,8 @@ public class EventDispatcher {
 	private static Condition overSignal = lock.newCondition();
 	static LinkedBlockingQueue<Query> queries = new LinkedBlockingQueue<Query>();
 	private static Timer timer;
-	static ArrayList<String> movies = new ArrayList<String>();;
+	static ArrayList<String> movies = new ArrayList<String>();
+	static String END_OF_GAME = "--- Game is over ---";
 	
 	public static void clickGo() {
 		lock.lock();
@@ -40,6 +41,8 @@ public class EventDispatcher {
         		go = false;
         		playing = false;
         		overSignal.signalAll();
+        		// on arrête les MovieChecker
+        		InputManager.input.add(new Query(END_OF_GAME,0));
 	        	Writer.message.setText("---- The game is over ----");
 				Writer.button.setText("Go !");
 		        Writer.button.setBackground(Color.GREEN);

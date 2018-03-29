@@ -16,7 +16,6 @@ public class MovieChecker extends Thread{
 	
 	public void run(){
 		while(true){
-			System.out.println("Test lancé sur "+wordTest);
 			// on parcourt la liste croissante jusqu'au bon endroit
 			while(compareString(wordTest, EventDispatcher.movies.get(j))>0){
 				j++;
@@ -45,7 +44,10 @@ public class MovieChecker extends Thread{
 					}
 				} catch (InterruptedException e) {}
 			}
-
+			// le jeu a été interrompu
+			if (InputManager.words.get(n + nbMots).equals(EventDispatcher.END_OF_GAME)) {
+				return;
+			}
 			// rajouter le nouveau mot tapé
 			wordTest = wordTest + " " + InputManager.words.get(n + nbMots);
 			nbMots++;

@@ -17,15 +17,17 @@ public class InputManager extends Thread {
 			try {
 				newQuery= input.take();
 			} catch (InterruptedException e) {}
-			EventDispatcher.queries.add(newQuery);
 			synchronized (words) {
 				words.add(newQuery.word);
 				nb++;
 				words.notifyAll();
 			}
-			Thread movieChecker = new MovieChecker(words.size()-1, newQuery);
-			movieChecker.start();
-
+			if (!newQuery.word.equals(EventDispatcher.END_OF_GAME)) {
+				// on ne cherche pas si end_of_game existe !
+				EventDispatcher.queries.add(newQuery);
+				Thread movieChecker = new MovieChecker(words.size()-1, newQuery);
+				movieChecker.start();
+			}
 		}
 	}
 	
