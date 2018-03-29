@@ -47,11 +47,13 @@ Enfin, un bouton permet de lancer ou arrêter la partie.
 Notre SpeedTyper permet d'interrompre et de relancer une nouvelle partie à tout moment en appuyant sur le bouton en bas.\par
 Pour le test des mots, nous avons utilisé l'API Oxford Dictionnaries qui teste les mots en anglais avec une requête. Chaque mot correct rajoute sa longueur en points et l'enlève s'il n'existe pas.\par
 Pour le test des noms de films, nous testons l'appartenance à une base de 250 films stockés dans un fichier texte. Un bon nom ajoute sa longueur au score (en comprenant les espaces pour compenser un titre avec que des mots faux).\par
+\vspace{1cm}
 
 \section{Implémentations}
 \subsection{Version naïve}
 Dans cette première version, le Thread Writer était chargé d'afficher l'UI et de gérer le texte tapé. Cependant, il devait aussi lancé le Timer et, à chaque fois qu'un nouveau mot était entré, il devait créer un Thread Checker qui devait tester ce mot.\par
-Nous nous sommes dit que cette implémentation mettait trop de charge sur Writer et que cela pouvait rendre l'UI moins fluide que désiré.\par
+Nous nous sommes dit que cette implémentation mettait trop de charge sur Writer et que cela pouvait rendre l'UI moins fluide que désirée.\par
+
 
 \subsection{Threads managers}
 \subsubsection{Chargement}
@@ -64,13 +66,13 @@ Pendant toute la durée du jeu, le Thread \textit{Writer} gère l'UI. En particu
 À chaque fois qu'il récupère un mot, \textit{InputManager} va :
 \begin{itemize}
 \item l'écrire dans une \textit{LinkedBlockedQueue} partagée avec les Threads \textit{Checker}. Cela réveille un Thread \textit{Checker} qui va envoyer une requête à l'API pour tester la présence du mot. En fonction du résultat, il va mettre à jour le score et la couleur du mot dans la fenêtre de sortie.
-\item créer et lancer un Thread \textit{MovieChecker}. Ce dernier va parcourir la liste des films pour voir si des films commencent par le mot tapé. Si cela n'est pas le cas, il s'arrête. Dans le cas contraire, il s'endort et attend que l'\textit{InputManager} ait traité un nouveau pour se réveiller et traiter le titre correspondant à la concaténation des deux mots. Il répète ces actions jusqu'à tomber sur un des 250 titres ou jusqu'à n'avoir plus aucun des titres qui pourrait correspondre (il s'arrête alors).
+\item créer et lancer un Thread \textit{MovieChecker}. Ce dernier va parcourir la liste des films pour voir si des films commencent par le mot tapé. Si cela n'est pas le cas, il s'arrête. Dans le cas contraire, il s'endort et attend que l'\textit{InputManager} ait traité un nouveau pour se réveiller et traiter le titre correspondant à la concaténation des deux mots. Il répète ces actions jusqu'à tomber sur un des 250 titres ou jusqu'à n'avoir plus aucun des titres qui pourrait correspondre (il s'arrête).
 \end{itemize}
 \subsubsection{Fin}
-Deux possibilités sont possibles pour finir le jeu :
+Deux scenarii sont envisageables pour finir le jeu :
 \begin{itemize}
 \item Soit le compte à rebours du \textit{Timer} arrive à 0. Dans ce cas, il envoie un signal sur \textit{overSignal} avant de mettre à jour le meilleur score le cas échéant. Ce signal réveille \textit{EventDispatcher} qui va recréer un nouveau \textit{Timer} et attendre un nouveau un appui sur le bouton Go.
-\item Soit le joueur appuie sur le bouton Stop. Dans ce cas, il ne compte plus écrire donc le Thread \textit{Writer} lui-même peut se charger d'envoyer un signal \textit{overSignal} et d'interrompre le Thread \textit{Timer}.
+\item Soit le joueur appuie sur le bouton Stop. Dans ce cas, il ne compte plus écrire donc le Thread \textit{Writer} lui-même peut se charger d'envoyer un signal \textit{overSignal} et d'interrompre le \textit{Timer}.
 \end{itemize}
 \section{Analyse de la programmation concurrente}
 \subsection{Verrous}

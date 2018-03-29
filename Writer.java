@@ -33,7 +33,7 @@ public class Writer extends JPanel implements ActionListener {
 
     public Writer() {
         super(new GridBagLayout());
-        this.setPreferredSize(new Dimension(445, 510));
+        this.setPreferredSize(new Dimension(430, 510));
         Border border3 = this.getBorder();
         Border margin3 = new EmptyBorder(0,10,0,10);
         this.setBorder(new CompoundBorder(border3, margin3));
@@ -100,7 +100,7 @@ public class Writer extends JPanel implements ActionListener {
         message.setHorizontalAlignment(JTextField.CENTER);
         JLabel labelMessage = new JLabel("Message");
         Border border2 = labelMessage.getBorder();
-        Border margin2 = new EmptyBorder(10,0,10,0);
+        Border margin2 = new EmptyBorder(10,5,10,0);
         labelMessage.setBorder(new CompoundBorder(border2, margin2));
         labelMessage.setLabelFor(message);
         

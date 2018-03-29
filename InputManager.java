@@ -31,4 +31,21 @@ public class InputManager extends Thread {
 		}
 	}
 	
+	public static void updateScore(int deltaScore) {
+		int newScore = Integer.parseInt(Writer.score.getText()) + deltaScore;
+		// on met à jour l'affichage du meilleur en score en live
+		if (newScore > Writer.bestScoreInt) {
+			synchronized (Writer.bestScore) {
+				Writer.bestScore.setText("" + newScore);
+			}
+			Writer.message.setText("---- You are playing with the stars ----");
+		} else if (Integer.parseInt(Writer.score.getText()) > Writer.bestScoreInt) { // on vient de repasser sous la barre du bestScore
+			synchronized (Writer.bestScore) {
+				Writer.bestScore.setText("" + Writer.bestScoreInt);
+			}
+		}
+		synchronized (Writer.score) {
+			Writer.score.setText("" +newScore);
+		}
+	}
 }

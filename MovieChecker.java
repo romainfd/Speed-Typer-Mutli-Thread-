@@ -28,9 +28,7 @@ public class MovieChecker extends Thread{
 			// on est arriv� sur le bon titre
 			if(compareString(EventDispatcher.movies.get(j), wordTest) == 0) {
 	            	Writer.outputField.writeMovie(new Query(wordTest, query.pos));
-		            synchronized (Writer.score) {
-		            	Writer.score.setText("" +(Integer.parseInt(Writer.score.getText()) + wordTest.length()));
-		            }
+	            	InputManager.updateScore(+wordTest.length());
 	            	return;
 			}
 			

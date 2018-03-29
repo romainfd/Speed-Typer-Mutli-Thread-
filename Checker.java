@@ -21,7 +21,6 @@ public class Checker extends Thread {
 				try {
 					this.query = EventDispatcher.queries.take();
 					Writer.outputField.append(this.query.word, Color.GRAY);
-					System.out.println("Test du mot \""+this.query.word+"\" in thread "+Thread.currentThread());
 					URL url = new URL(query());
 		            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
 		            urlConnection.setRequestProperty("Accept","application/json");
@@ -42,14 +41,10 @@ public class Checker extends Thread {
 			            System.out.println(stringBuilder.toString());
 			            */
 			            Writer.outputField.write(this.query, Color.GREEN);
-			            synchronized (Writer.score) {
-			            	Writer.score.setText("" +(Integer.parseInt(Writer.score.getText()) + this.query.word.length()));
-			            }
+		            	InputManager.updateScore(+this.query.word.length());
 		            } catch (java.io.FileNotFoundException e) {
 		            	Writer.outputField.write(this.query, Color.RED);
-			            synchronized (Writer.score) {
-			            	Writer.score.setText("" +(Integer.parseInt(Writer.score.getText()) - this.query.word.length()));
-			            }
+		            	InputManager.updateScore(-this.query.word.length());
 		            }
 				} catch (Exception e) {
 					e.printStackTrace();
