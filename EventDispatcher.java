@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -41,10 +42,12 @@ public class EventDispatcher {
         		overSignal.signalAll();
 	        	Writer.message.setText("---- The game is over ----");
 				Writer.button.setText("Go !");
+		        Writer.button.setBackground(Color.GREEN);
 			} else if (newGo && !go) { // lancer
 				go = true;
 				goSignal.signalAll();
 				Writer.button.setText("Stop");
+		        Writer.button.setBackground(Color.RED);
 		        Writer.message.setText("---- Ready, set, ... ----");
 				// on lance les Threads en attente (Timer et les Checker)
 			}
@@ -55,14 +58,14 @@ public class EventDispatcher {
 	
 	
     public static void main(String[] args) throws InterruptedException {  	
-    	System.out.println(MovieChecker.compareString("inception","A Clockwork Orange"));
         Writer.createAndShowGUI();
-        // Gestion des mots tapï¿½s
+        // Gestion des mots tapé
         Thread inputManager = new InputManager();
         inputManager.start();
         // Enregistrement des films
         TC.lectureDansFichier("src/movies.txt");
-        String movie;
+        String movie = TC.lireLigne().substring(3); // remove the BOM
+    	movies.add(movie);
         while (!TC.finEntree()) {
         	movie = TC.lireLigne();
         	movies.add(movie);

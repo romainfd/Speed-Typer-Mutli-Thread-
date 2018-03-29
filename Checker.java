@@ -42,19 +42,13 @@ public class Checker extends Thread {
 			            System.out.println(stringBuilder.toString());
 			            */
 			            Writer.outputField.write(this.query, Color.GREEN);
-			            try {
-			            	Writer.scoreLock.lock();
+			            synchronized (Writer.score) {
 			            	Writer.score.setText("" +(Integer.parseInt(Writer.score.getText()) + this.query.word.length()));
-			            } finally {
-			            	Writer.scoreLock.unlock();
 			            }
 		            } catch (java.io.FileNotFoundException e) {
 		            	Writer.outputField.write(this.query, Color.RED);
-			            try {
-			            	Writer.scoreLock.lock();
+			            synchronized (Writer.score) {
 			            	Writer.score.setText("" +(Integer.parseInt(Writer.score.getText()) - this.query.word.length()));
-			            } finally {
-			            	Writer.scoreLock.unlock();
 			            }
 		            }
 				} catch (Exception e) {
