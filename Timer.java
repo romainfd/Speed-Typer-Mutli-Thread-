@@ -2,7 +2,7 @@ import tc.TC;
 
 public class Timer extends Thread {
 	static long delayStart = 3000;
-	static long duration = 18000;
+	static long duration = 180000;
 	
 
 	public String msToText(long timeMs) {
@@ -37,7 +37,7 @@ public class Timer extends Thread {
         Writer.inputField.setEditable(true);
         Writer.message.setText("---- The game is on ! Try to type as fast as you can ----");
         
-        // on relance le compte à rebours mais depuis duration ms
+        // on relance le compte ï¿½ rebours mais depuis duration ms
         t0 = System.currentTimeMillis();
         t = t0;
         while (t - t0 < duration) {
@@ -53,13 +53,13 @@ public class Timer extends Thread {
     	if (Thread.interrupted()) return;
         Writer.inputField.setEditable(false);
         
-        // on annonce à l'Event Dispatcher que le jeu est terminé
+        // on annonce ï¿½ l'Event Dispatcher que le jeu est terminï¿½
         EventDispatcher.setGo(false);
         
         // Gestion du meilleur score
         int newScore = Integer.parseInt(Writer.score.getText());
         if (newScore > Writer.bestScoreInt) {
-        	// on met à jour l'affichage
+        	// on met ï¿½ jour l'affichage
         	Writer.bestScore.setText(""+newScore);
         	Writer.message.setText("---- Best score beaten ! ----");
         	// on enregistre le meilleur score
