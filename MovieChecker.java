@@ -24,7 +24,8 @@ public class MovieChecker extends Thread{
 					return;
 				}
 			}
-			// on est arrivé sur le bon titre
+
+			// on est arrivï¿½ sur le bon titre
 			if(compareString(EventDispatcher.movies.get(j), wordTest) == 0) {
 	            	Writer.outputField.writeMovie(new Query(wordTest, query.pos));
 		            synchronized (Writer.score) {
@@ -36,7 +37,7 @@ public class MovieChecker extends Thread{
 			// on n'est pas dans la liste des titres
 			if(EventDispatcher.movies.get(j).toLowerCase().indexOf(wordTest.toLowerCase())!=0) return;
 
-			// on attend qu'un nouveau mot soit ajouté car on a un début de titre mais pas complet
+			// on attend qu'un nouveau mot soit ajoutï¿½ car on a un dï¿½but de titre mais pas complet
 			synchronized (InputManager.words) {
 				try {
 					while(InputManager.nb <= n + nbMots) {

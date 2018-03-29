@@ -5,6 +5,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -22,6 +24,7 @@ public class Writer extends JPanel implements ActionListener {
     protected static JColorTextPane outputField;
     protected static JTextField message;
     protected static JTextField score;
+    protected static JTextField resultat;
     protected static JTextField bestScore;
     protected static int bestScoreInt;    
     protected static ReentrantLock scoreLock = new ReentrantLock(); // pour modifier le score !
@@ -30,11 +33,15 @@ public class Writer extends JPanel implements ActionListener {
 
     public Writer() {
         super(new GridBagLayout());
-        this.setPreferredSize(new Dimension(430, 480));
+        this.setPreferredSize(new Dimension(505, 510));
+        Border border3 = this.getBorder();
+        Border margin3 = new EmptyBorder(0,10,0,10);
+        this.setBorder(new CompoundBorder(border3, margin3));
 
         inputField = new JTextArea(11, 20);
         inputField.setLineWrap(true);
         inputField.setEditable(false);  // tant que le timer n'est pas lancï¿½, on ne peut rien faire
+        inputField.setMargin( new Insets(10,10,10,10) );
         JScrollPane scrollPaneInput = new JScrollPane(inputField);
 
         // On ï¿½coute l'appui sur la touche espace
@@ -80,6 +87,7 @@ public class Writer extends JPanel implements ActionListener {
         
         outputField = new JColorTextPane();
         outputField.setEditable(false);
+        outputField.setMargin( new Insets(10,10,10,10) );
         JScrollPane scrollPane = new JScrollPane(outputField);
 
         message = new JTextField(20) {
@@ -91,16 +99,36 @@ public class Writer extends JPanel implements ActionListener {
         message.setEditable(false);
         message.setHorizontalAlignment(JTextField.CENTER);
         JLabel labelMessage = new JLabel("Message");
+        Border border2 = labelMessage.getBorder();
+        Border margin2 = new EmptyBorder(10,10,10,10);
+        labelMessage.setBorder(new CompoundBorder(border2, margin2));
         labelMessage.setLabelFor(message);
+        
+        resultat = new JTextField(30) {
+            @Override public void setBorder(Border border) {
+                // No!
+            }
+        };
+        resultat.setText("Green : correct | Red : wrong | Bold : movie title");
+        resultat.setEditable(false);
+        resultat.setHorizontalAlignment(JTextField.CENTER);
+        JLabel labelResultat = new JLabel("Resultat");
+        Border border4 = labelMessage.getBorder();
+        Border margin4 = new EmptyBorder(0,10,0,10);
+        labelResultat.setBorder(new CompoundBorder(border4, margin4));
+        labelResultat.setLabelFor(resultat);
 
-        score = new JTextField(5) {
+        score = new JTextField(5){
             @Override public void setBorder(Border border) {
                 // No!
             }
         };
         score.setText("0");
         score.setEditable(false);
-        JLabel labelScore = new JLabel("            Score      ");
+        JLabel labelScore = new JLabel("Score");
+        Border border1 = labelScore.getBorder();
+        Border margin1 = new EmptyBorder(10,10,10,10);
+        labelScore.setBorder(new CompoundBorder(border1, margin1));
         labelScore.setLabelFor(score);
 
         
@@ -128,7 +156,9 @@ public class Writer extends JPanel implements ActionListener {
         
         JLabel labelTimeVide = new JLabel("   ");
         JLabel labelTimeVide2 = new JLabel("   ");
-        JLabel labelTimeVide3 = new JLabel("   ");
+
+
+
         
         button = new JButton("Go !");
         
@@ -144,19 +174,29 @@ public class Writer extends JPanel implements ActionListener {
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         add(labelTimeVide,c);
-        add(labelTimeVide2,c);
         add(labelMessage);
         add(message, c);
         add(scrollPaneInput, c); 
-        add(labelTimeVide3,c);        
+        add(labelTimeVide2,c);
+
+;        
 
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
         c.weighty = 1.0;
         scrollPane.setAutoscrolls(true);
+        add(labelResultat);
+        c.fill = GridBagConstraints.NONE;
+        c.weightx = 0;
+        c.weighty = 0;
+        add(resultat,c);
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
         add(scrollPane, c);
+
         
-        // Ajout du bouton et écoute
+        // Ajout du bouton et ï¿½coute
         c.fill = GridBagConstraints.NONE;
         c.weightx = 1.0;
         c.weighty = 0.15;
@@ -205,29 +245,29 @@ public class Writer extends JPanel implements ActionListener {
         	// synchronized pour eviter les ecritures concurrentes
         	// Met le texte de la couleur voulue
             StyleContext sc = StyleContext.getDefaultStyleContext();
-            // on récupère les attributs de l'ancien mot (gras ?)
+            // on rï¿½cupï¿½re les attributs de l'ancien mot (gras ?)
             MutableAttributeSet asNew = new SimpleAttributeSet(getStyledDocument().getCharacterElement(query.pos).getAttributes().copyAttributes());
             //
 			try {
 				StyleConstants.setForeground(asNew, c);
-				// puis on le met à jour dans l'output (plus gris)
+				// puis on le met ï¿½ jour dans l'output (plus gris)
 				getStyledDocument().remove(query.pos, query.word.length());
 				getStyledDocument().insertString(query.pos, query.word, asNew);
 			} catch (BadLocationException e) {}
         }
         
     	/**
-    	 * Efface le mot et le reecris souligné
+    	 * Efface le mot et le reecris soulignï¿½
     	 * Thread-safe
     	 */
         public synchronized void writeMovie(Query query) {
         	// synchronized pour eviter les ecritures concurrentes
 			try {
-				// on parcourt le smots du titre déjà écrits pour garder leur ancienne police
+				// on parcourt le smots du titre dï¿½jï¿½ ï¿½crits pour garder leur ancienne police
 				String[] words = query.word.split(" ");
 				int pos = query.pos;
-				for (String word : words) { // on parcourt les mots pour garder éventuellement
-		            // on récupère les attributs de l'ancien mot (vert ?)
+				for (String word : words) { // on parcourt les mots pour garder ï¿½ventuellement
+		            // on rï¿½cupï¿½re les attributs de l'ancien mot (vert ?)
 		            MutableAttributeSet asNew = new SimpleAttributeSet(getStyledDocument().getCharacterElement(pos).getAttributes().copyAttributes());
 		            // on le met en grand
 					StyleConstants.setFontSize(asNew, 14);
@@ -236,7 +276,7 @@ public class Writer extends JPanel implements ActionListener {
 					
 					getStyledDocument().remove(pos, word.length() + 1);
 					getStyledDocument().insertString(pos, word+ " ", asNew);
-					pos += word.length() + 1; // on décale du mot et de l'espace
+					pos += word.length() + 1; // on dï¿½cale du mot et de l'espace
 				}
 			} catch (BadLocationException e) {}
         }
