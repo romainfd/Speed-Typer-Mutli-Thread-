@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -41,10 +42,12 @@ public class EventDispatcher {
         		overSignal.signalAll();
 	        	Writer.message.setText("---- The game is over ----");
 				Writer.button.setText("Go !");
+		        Writer.button.setBackground(Color.GREEN);
 			} else if (newGo && !go) { // lancer
 				go = true;
 				goSignal.signalAll();
 				Writer.button.setText("Stop");
+		        Writer.button.setBackground(Color.RED);
 		        Writer.message.setText("---- Ready, set, ... ----");
 				// on lance les Threads en attente (Timer et les Checker)
 			}

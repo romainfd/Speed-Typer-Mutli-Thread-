@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9) (preloaded format=pdflatex 2016.8.23)  29 MAR 2018 17:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9) (preloaded format=pdflatex 2016.8.23)  29 MAR 2018 18:05
 entering extended mode
 **./rapport.tex
 (rapport.tex
@@ -986,14 +986,13 @@ File: polytechnique-filetlongrouge.pdf Graphic file (type pdf)
 Package pdftex.def Info: polytechnique-filetlongrouge.pdf used on input line 20
 .
 (pdftex.def)             Requested size: 124.21074pt x 2.16628pt.
+File: polytechnique-filetlongrouge.pdf Graphic file (type pdf)
+ <use polytechnique-filetlongrouge.pdf>
+Package pdftex.def Info: polytechnique-filetlongrouge.pdf used on input line 24
+.
+(pdftex.def)             Requested size: 124.21074pt x 2.16628pt.
 
 <polytechnique-filetcourtbleuclair.pdf, id=69, 28.40492pt x 2.16678pt>
-File: polytechnique-filetcourtbleuclair.pdf Graphic file (type pdf)
-
-<use polytechnique-filetcourtbleuclair.pdf>
-Package pdftex.def Info: polytechnique-filetcourtbleuclair.pdf used on input li
-ne 21.
-(pdftex.def)             Requested size: 28.40483pt x 2.16676pt.
 File: polytechnique-filetcourtbleuclair.pdf Graphic file (type pdf)
 
 <use polytechnique-filetcourtbleuclair.pdf>
@@ -1001,11 +1000,18 @@ Package pdftex.def Info: polytechnique-filetcourtbleuclair.pdf used on input li
 ne 25.
 (pdftex.def)             Requested size: 28.40483pt x 2.16676pt.
 
-<polytechnique-logohori.pdf, id=70, 195.52248pt x 85.3575pt>
+<interfaceGraphique.png, id=70, 688.4922pt x 390.7398pt>
+File: interfaceGraphique.png Graphic file (type png)
+
+<use interfaceGraphique.png>
+Package pdftex.def Info: interfaceGraphique.png used on input line 28.
+(pdftex.def)             Requested size: 483.70619pt x 312.99173pt.
+
+<polytechnique-logohori.pdf, id=72, 195.52248pt x 85.3575pt>
 File: polytechnique-logohori.pdf Graphic file (type pdf)
 
 <use polytechnique-logohori.pdf>
-Package pdftex.def Info: polytechnique-logohori.pdf used on input line 26.
+Package pdftex.def Info: polytechnique-logohori.pdf used on input line 32.
 (pdftex.def)             Requested size: 97.76396pt x 42.67912pt.
  [2
 
@@ -1013,24 +1019,43 @@ Package pdftex.def Info: polytechnique-logohori.pdf used on input line 26.
 resources/polytechnique-logohori.pdf> <C:/Users/Romain Fouilland/AppData/Roamin
 g/MiKTeX/2.9/tex/latex/polytechnique/resources/polytechnique-filetlongrouge.pdf
 > <C:/Users/Romain Fouilland/AppData/Roaming/MiKTeX/2.9/tex/latex/polytechnique
-/resources/polytechnique-filetcourtbleuclair.pdf>] (rapport.aux) ) 
+/resources/polytechnique-filetcourtbleuclair.pdf> <./interfaceGraphique.png>]
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 L
+      a ligne suivante permet d'afficher des messages pour donner des inform...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+File: polytechnique-logohori.pdf Graphic file (type pdf)
+<use polytechnique-logohori.pdf>
+Package pdftex.def Info: polytechnique-logohori.pdf used on input line 39.
+(pdftex.def)             Requested size: 97.76396pt x 42.67912pt.
+ [3] (rapport.aux) ) 
 Here is how much of TeX's memory you used:
- 5922 strings out of 493334
- 80950 string characters out of 3136637
- 145554 words of memory out of 3000000
- 9290 multiletter control sequences out of 15000+200000
+ 5929 strings out of 493334
+ 81091 string characters out of 3136637
+ 146554 words of memory out of 3000000
+ 9295 multiletter control sequences out of 15000+200000
  52574 words of font info for 50 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 40i,9n,36p,376b,439s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program F
-iles (x86)/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}<C:/Program Files (x86)/MiKT
-eX 2.9/fonts/type1/public/lm/lmcsc10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fon
-ts/type1/public/lm/lmr10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/pub
-lic/lm/lmr12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/lm/lmss1
-2.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/lm/lmssbx10.pfb>
-Output written on rapport.pdf (2 pages, 1651371 bytes).
+ 40i,9n,36p,376b,445s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec
+.enc}<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/lm/lmcsc10.pfb><C:/P
+rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/lm/lmr10.pfb><C:/Program Files
+ (x86)/MiKTeX 2.9/fonts/type1/public/lm/lmr12.pfb><C:/Program Files (x86)/MiKTe
+X 2.9/fonts/type1/public/lm/lmss12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts
+/type1/public/lm/lmssbx10.pfb>
+Output written on rapport.pdf (3 pages, 1732900 bytes).
 PDF statistics:
- 156 PDF objects out of 1000 (max. 8388607)
+ 162 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

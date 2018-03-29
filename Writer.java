@@ -26,11 +26,10 @@ public class Writer extends JPanel implements ActionListener {
     protected static ReentrantLock scoreLock = new ReentrantLock(); // pour modifier le score !
     protected static JTextField time;
     protected static JButton button;
-    ArrayList<String> words = new ArrayList();
 
     public Writer() {
         super(new GridBagLayout());
-        this.setPreferredSize(new Dimension(500, 480));
+        this.setPreferredSize(new Dimension(430, 480));
 
         inputField = new JTextArea(11, 20);
         inputField.setLineWrap(true);
@@ -156,8 +155,12 @@ public class Writer extends JPanel implements ActionListener {
         scrollPane.setAutoscrolls(true);
         add(scrollPane, c);
         
-        // Ajout du bouton et ï¿½coute
-        this.add(button);
+        // Ajout du bouton et écoute
+        c.fill = GridBagConstraints.NONE;
+        c.weightx = 1.0;
+        c.weighty = 0.15;
+        button.setBackground(Color.GREEN);
+        this.add(button, c);
         button.addActionListener(this);
     }
 
