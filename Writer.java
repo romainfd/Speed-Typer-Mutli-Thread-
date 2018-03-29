@@ -8,6 +8,7 @@ import javax.swing.border.Border;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
@@ -204,11 +205,39 @@ public class Writer extends JPanel implements ActionListener {
         	// synchronized pour eviter les ecritures concurrentes
         	// Met le texte de la couleur voulue
             StyleContext sc = StyleContext.getDefaultStyleContext();
-            AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+            // on récupère les attributs de l'ancien mot (gras ?)
+            MutableAttributeSet asNew = new SimpleAttributeSet(getStyledDocument().getCharacterElement(query.pos).getAttributes().copyAttributes());
             //
 			try {
+				StyleConstants.setForeground(asNew, c);
+				// puis on le met à jour dans l'output (plus gris)
 				getStyledDocument().remove(query.pos, query.word.length());
-				getStyledDocument().insertString(query.pos, query.word, aset);
+				getStyledDocument().insertString(query.pos, query.word, asNew);
+			} catch (BadLocationException e) {}
+        }
+        
+    	/**
+    	 * Efface le mot et le reecris souligné
+    	 * Thread-safe
+    	 */
+        public synchronized void writeMovie(Query query) {
+        	// synchronized pour eviter les ecritures concurrentes
+			try {
+				// on parcourt le smots du titre déjà écrits pour garder leur ancienne police
+				String[] words = query.word.split(" ");
+				int pos = query.pos;
+				for (String word : words) { // on parcourt les mots pour garder éventuellement
+		            // on récupère les attributs de l'ancien mot (vert ?)
+		            MutableAttributeSet asNew = new SimpleAttributeSet(getStyledDocument().getCharacterElement(pos).getAttributes().copyAttributes());
+		            // on le met en grand
+					StyleConstants.setFontSize(asNew, 14);
+					// et en gras
+					StyleConstants.setBold(asNew, true);
+					
+					getStyledDocument().remove(pos, word.length() + 1);
+					getStyledDocument().insertString(pos, word+ " ", asNew);
+					pos += word.length() + 1; // on décale du mot et de l'espace
+				}
 			} catch (BadLocationException e) {}
         }
         
@@ -225,7 +254,6 @@ public class Writer extends JPanel implements ActionListener {
 			try {
 				getStyledDocument().insertString(getDocument().getLength(), word+" ", aset);
 			} catch (BadLocationException e) {}
-        }
-         
+        }         
     }
 }
