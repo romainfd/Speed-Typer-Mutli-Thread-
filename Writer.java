@@ -3,23 +3,37 @@ import java.awt.event.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+
+import tc.TC;
 
 @SuppressWarnings("serial")
 public class Writer extends JPanel implements ActionListener {
-    protected static JTextField inputField;
+    protected static JTextArea inputField;
     // On pourrait éventuellement le remplacer par un documentListener pour permettre de modifier les modifications du texte déjà taper et pas juste regarder le dernier mot tapé avant un espace
-    protected static JTextArea outputField;
+    protected static JColorTextPane outputField;
+    protected static JTextField message;
     protected static JTextField score;
+    protected static JTextField bestScore;
+    protected static int bestScoreInt;    
     protected static ReentrantLock scoreLock = new ReentrantLock(); // pour modifier le score !
     protected static JTextField time;
     protected static JButton button;
-    private final static String newline = "\n";
 
     public Writer() {
         super(new GridBagLayout());
+        this.setPreferredSize(new Dimension(430, 480));
 
-        inputField = new JTextField(20);
+        inputField = new JTextArea(11, 20);
+        inputField.setLineWrap(true);
         inputField.setEditable(false);  // tant que le timer n'est pas lancé, on ne peut rien faire
+        JScrollPane scrollPaneInput = new JScrollPane(inputField);
 
         // On écoute l'appui sur la touche espace
         InputMap imap = inputField.getInputMap(JComponent.WHEN_FOCUSED);
@@ -42,37 +56,102 @@ public class Writer extends JPanel implements ActionListener {
             	}
             	String word = text.substring(i, iFin);
                 // System.out.println("Space Pressed: " + word);
-                Checker checker = new Checker(word);
-                checker.start();
+            	EventDispatcher.queries.add(new Query(word, i));
+            	// bug si dépasse la capacité de la blockingQueue
             }
         });
-
-        outputField = new JTextArea(5, 20);
+        
+        // on empeche d'effacer les mots déjà validés
+        imap.put(KeyStroke.getKeyStroke("BACK_SPACE"), "removeLetter");
+        amap.put("removeLetter", new AbstractAction(){
+            public void actionPerformed(ActionEvent e) {
+            	Document doc = inputField.getDocument();
+            	int pos = doc.getLength() - 1;
+            	if (pos < 0) return;
+            	char lastChar = inputField.getText().charAt(pos);
+            	if (lastChar == ' ') return; // on ne peut plus enlever un mot validé
+            	try {
+					inputField.getDocument().remove(pos, 1);
+				} catch (BadLocationException e1) {	}
+            }
+        });
+        
+        outputField = new JColorTextPane();
         outputField.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(outputField);
 
-        score = new JTextField(20);
+        message = new JTextField(20) {
+            @Override public void setBorder(Border border) {
+                // No!
+            }
+        };
+        message.setText("---- Welcome in SpeedTyper ! ----");
+        message.setEditable(false);
+        message.setHorizontalAlignment(JTextField.CENTER);
+        JLabel labelMessage = new JLabel("Message");
+        labelMessage.setLabelFor(message);
+
+        score = new JTextField(5) {
+            @Override public void setBorder(Border border) {
+                // No!
+            }
+        };
         score.setText("0");
         score.setEditable(false);
+        JLabel labelScore = new JLabel("            Score      ");
+        labelScore.setLabelFor(score);
+
         
-        time = new JTextField(20);
+    	TC.lectureDansFichier("src/bestScore.txt");
+    	bestScoreInt = TC.lireInt();
+        bestScore = new JTextField(5) {
+            @Override public void setBorder(Border border) {
+                // No!
+            }
+        };
+        bestScore.setText(""+bestScoreInt);
+        bestScore.setEditable(false);
+        JLabel labelBestScore = new JLabel("      Best score      ");
+        labelBestScore.setLabelFor(bestScore);
+
+        time = new JTextField(5) {
+            @Override public void setBorder(Border border) {
+                // No!
+            }
+        };
         time.setText("0");
         time.setEditable(false);
+        JLabel labelTime = new JLabel("      Time      ");
+        labelTime.setLabelFor(time);       
+        
+        JLabel labelTimeVide = new JLabel("   ");
+        JLabel labelTimeVide2 = new JLabel("   ");
+        JLabel labelTimeVide3 = new JLabel("   ");
         
         button = new JButton("Go !");
         
         //Add Components to this panel.
         GridBagConstraints c = new GridBagConstraints();
-        c.gridwidth = GridBagConstraints.REMAINDER;
-
         c.fill = GridBagConstraints.HORIZONTAL;
-        add(inputField, c);        
+        add(labelScore, c);
         add(score, c);
-        add(time, c);
-        
+        add(labelBestScore, c);
+        add(bestScore, c);
+        add(labelTime,c);
+        add(time, c);        
+
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        add(labelTimeVide,c);
+        add(labelTimeVide2,c);
+        add(labelMessage);
+        add(message, c);
+        add(scrollPaneInput, c); 
+        add(labelTimeVide3,c);        
+
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
         c.weighty = 1.0;
+        scrollPane.setAutoscrolls(true);
         add(scrollPane, c);
         
         // Ajout du bouton et écoute
@@ -82,16 +161,10 @@ public class Writer extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent evt) {
     	if (evt.getSource() == button) { // Appui sur le bouton
-    		EventDispatcher.setGo(true);
+    		EventDispatcher.clickGo();
     		// va lancer les Checker et le Timer
+    		return;
     	}
-        String text = inputField.getText();
-        outputField.append(text + newline);
-        inputField.selectAll();
-
-        //Make sure the new text is visible, even if there
-        //was a selection in the text area.
-        outputField.setCaretPosition(outputField.getDocument().getLength());
     }
 
     /**
@@ -101,7 +174,7 @@ public class Writer extends JPanel implements ActionListener {
      */
     protected static Writer createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("TextDemo");
+        JFrame frame = new JFrame("SpeedTyper");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Add contents to the window.
@@ -115,11 +188,39 @@ public class Writer extends JPanel implements ActionListener {
         return writer;
     }
 
-    /**
-     * Affiche dans la fenetre d'output la chaine str
-     * @param str
-     */
-    public static void outputWrite(String str) {
-    	outputField.append(str+newline);
+
+    // Pour afficher l'output avec des couleurs
+    public class JColorTextPane extends JTextPane {   
+    	/**
+    	 * Efface le mot et le réécris de la bonne couleur
+    	 * Thread-safe
+    	 */
+        public synchronized void write(Query query, Color c) {
+        	// synchronized pour eviter les ecritures concurrentes
+        	// Met le texte de la couleur voulue
+            StyleContext sc = StyleContext.getDefaultStyleContext();
+            AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+            //
+			try {
+				getStyledDocument().remove(query.pos, query.word.length());
+				getStyledDocument().insertString(query.pos, query.word, aset);
+			} catch (BadLocationException e) {}
+        }
+        
+        /**
+         * Ajoute simplement le mot à la fin
+         * Thread-safe
+         */
+        public synchronized void append(String word, Color c) {
+        	// synchronized pour eviter les ecritures concurrentes
+        	// Met le texte de la couleur voulue
+            StyleContext sc = StyleContext.getDefaultStyleContext();
+            AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+            //
+			try {
+				getStyledDocument().insertString(getDocument().getLength(), word+" ", aset);
+			} catch (BadLocationException e) {}
+        }
+         
     }
 }
