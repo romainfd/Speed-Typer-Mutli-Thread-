@@ -33,7 +33,7 @@ public class Writer extends JPanel implements ActionListener {
 
     public Writer() {
         super(new GridBagLayout());
-        this.setPreferredSize(new Dimension(505, 510));
+        this.setPreferredSize(new Dimension(445, 510));
         Border border3 = this.getBorder();
         Border margin3 = new EmptyBorder(0,10,0,10);
         this.setBorder(new CompoundBorder(border3, margin3));

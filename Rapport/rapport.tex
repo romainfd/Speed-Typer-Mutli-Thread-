@@ -27,6 +27,7 @@ La figure suivante est notre interface graphique finale.\par
 \begin{center}
 \includegraphics[width = 17cm, height = 11cm]{interfaceGraphique.png}
 \end{center}\par
+Pour l'interface utilisateur, on a choisi d'utiliser un JPanel. Cependant, la fenêtre s'affiche différemment sur nos ordinateurs et il peut donc être nécessaire de la redimensionner un peu pour voir tous les champs.\par
 Comme on peut le voir, la première ligne sert à gérer les données du jeu à savoir :
 \begin{itemize}
 \item Le score courant du joueur
@@ -71,4 +72,15 @@ Deux possibilités sont possibles pour finir le jeu :
 \item Soit le compte à rebours du \textit{Timer} arrive à 0. Dans ce cas, il envoie un signal sur \textit{overSignal} avant de mettre à jour le meilleur score le cas échéant. Ce signal réveille \textit{EventDispatcher} qui va recréer un nouveau \textit{Timer} et attendre un nouveau un appui sur le bouton Go.
 \item Soit le joueur appuie sur le bouton Stop. Dans ce cas, il ne compte plus écrire donc le Thread \textit{Writer} lui-même peut se charger d'envoyer un signal \textit{overSignal} et d'interrompre le Thread \textit{Timer}.
 \end{itemize}
+\section{Analyse de la programmation concurrente}
+\subsection{Verrous}
+Pour pouvoir mettre à jour en parallèle le score (par les \textit{Checker} et les \textit{MovieChecker}) et le texte de sortie (écriture du mot en gris, puis de sa correction par un \textit{Checker} et éventuellement de sa correspondance avec un titre par un \textit{MovieChecker}), il fallait verrouiller ces champs. On a pour cela utilisé le mot-clé \textit{synchronized}.\par
+Pour que l'\textit{InputManager} puisse réveiller les Threads \textit{MovieChecker} qui attendaient de nouveaux mots pour compléter leur titre, on a utilisé les mots-clés \textit{synchronized, notifyAll} et \textit{wait} sur la liste des mots traités par l'\textit{InputManager}.
+\subsection{Signaux}
+Pour signaler aux Threads concernés que le jeu vient d'être lancé (pour lancer le décompte) ou qu'il vient de se finir (relancer \textit{EventDispatcher}), on a utilisé un verrou et deux signaux \textit{signalGo} et \textit{signalOver} liés à ce verrou.
+\subsection{Sleep}
+Le \textit{Timer} ne peut jamais être arrêté car il doit mettre à jour le temps toutes les 0.1s mais on a mis un \textit{Thread.sleep(50);} tant qu'il restait plus de 300ms pour permettre d'éviter de l'attente active inutile.
+\subsection{LinkedBlockingQueue}
+On a utilisé une première \textit{LinkedBlockingQueue} pour dialoguer entre l'UI et l'\textit{InputManager}. Ce dernier dialogue avec les \textit{Checker} avec une autre \textit{LinkedBlockingQueue} car ces derniers sont en nombre fixe et ne meurent jamais pendant une partie.\par
+Pour les \textit{MovieChecker}, on a choisi d'en créer autant qu'il peut y avoir de titres possibles en parallèle et de les tuer que lorsqu'il est impossible que leur séquence de mots corresponde à un titre. De ce fait, ils sont \textit{synchronized} sur la liste des mots traités par l'\textit{InputManager} et celui-ci leur envoie une \textit{String END\_OF\_GAME} pour les arrêter lorsqu'une partie est finie.
 \end{document}
