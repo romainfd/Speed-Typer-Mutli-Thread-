@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ import tc.TC;
 @SuppressWarnings("serial")
 public class Writer extends JPanel implements ActionListener {
     protected static JTextArea inputField;
-    // On pourrait éventuellement le remplacer par un documentListener pour permettre de modifier les modifications du texte déjà taper et pas juste regarder le dernier mot tapé avant un espace
+    // On pourrait ï¿½ventuellement le remplacer par un documentListener pour permettre de modifier les modifications du texte dï¿½jï¿½ taper et pas juste regarder le dernier mot tapï¿½ avant un espace
     protected static JColorTextPane outputField;
     protected static JTextField message;
     protected static JTextField score;
@@ -25,26 +26,27 @@ public class Writer extends JPanel implements ActionListener {
     protected static ReentrantLock scoreLock = new ReentrantLock(); // pour modifier le score !
     protected static JTextField time;
     protected static JButton button;
+    ArrayList<String> words = new ArrayList();
 
     public Writer() {
         super(new GridBagLayout());
-        this.setPreferredSize(new Dimension(430, 480));
+        this.setPreferredSize(new Dimension(500, 480));
 
         inputField = new JTextArea(11, 20);
         inputField.setLineWrap(true);
-        inputField.setEditable(false);  // tant que le timer n'est pas lancé, on ne peut rien faire
+        inputField.setEditable(false);  // tant que le timer n'est pas lancï¿½, on ne peut rien faire
         JScrollPane scrollPaneInput = new JScrollPane(inputField);
 
-        // On écoute l'appui sur la touche espace
+        // On ï¿½coute l'appui sur la touche espace
         InputMap imap = inputField.getInputMap(JComponent.WHEN_FOCUSED);
         imap.put(KeyStroke.getKeyStroke("SPACE"), "spaceAction");
-        // On exécute le code voulu lorsqu'un appui sur la touche expace est trouvé
+        // On exï¿½cute le code voulu lorsqu'un appui sur la touche expace est trouvï¿½
         ActionMap amap = inputField.getActionMap();
         amap.put("spaceAction", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
-            	// action à chaque appui sur espace : récupérer le dernier mot
+            	// action ï¿½ chaque appui sur espace : rï¿½cupï¿½rer le dernier mot
             	String text = inputField.getText();
-            	// on devrait s'assurer qu'il n'y a rien eu de tapé depuis !
+            	// on devrait s'assurer qu'il n'y a rien eu de tapï¿½ depuis !
             	int i = text.length();
             	int iFin = i;
             	while (i > 0) {
@@ -56,12 +58,12 @@ public class Writer extends JPanel implements ActionListener {
             	}
             	String word = text.substring(i, iFin);
                 // System.out.println("Space Pressed: " + word);
-            	EventDispatcher.queries.add(new Query(word, i));
-            	// bug si dépasse la capacité de la blockingQueue
+            	InputManager.input.add(new Query(word, i));
+            	// bug si dï¿½passe la capacitï¿½ de la blockingQueue
             }
         });
         
-        // on empeche d'effacer les mots déjà validés
+        // on empeche d'effacer les mots dï¿½jï¿½ validï¿½s
         imap.put(KeyStroke.getKeyStroke("BACK_SPACE"), "removeLetter");
         amap.put("removeLetter", new AbstractAction(){
             public void actionPerformed(ActionEvent e) {
@@ -69,7 +71,7 @@ public class Writer extends JPanel implements ActionListener {
             	int pos = doc.getLength() - 1;
             	if (pos < 0) return;
             	char lastChar = inputField.getText().charAt(pos);
-            	if (lastChar == ' ') return; // on ne peut plus enlever un mot validé
+            	if (lastChar == ' ') return; // on ne peut plus enlever un mot validï¿½
             	try {
 					inputField.getDocument().remove(pos, 1);
 				} catch (BadLocationException e1) {	}
@@ -154,7 +156,7 @@ public class Writer extends JPanel implements ActionListener {
         scrollPane.setAutoscrolls(true);
         add(scrollPane, c);
         
-        // Ajout du bouton et écoute
+        // Ajout du bouton et ï¿½coute
         this.add(button);
         button.addActionListener(this);
     }
@@ -192,7 +194,7 @@ public class Writer extends JPanel implements ActionListener {
     // Pour afficher l'output avec des couleurs
     public class JColorTextPane extends JTextPane {   
     	/**
-    	 * Efface le mot et le réécris de la bonne couleur
+    	 * Efface le mot et le rï¿½ï¿½cris de la bonne couleur
     	 * Thread-safe
     	 */
         public synchronized void write(Query query, Color c) {
@@ -208,7 +210,7 @@ public class Writer extends JPanel implements ActionListener {
         }
         
         /**
-         * Ajoute simplement le mot à la fin
+         * Ajoute simplement le mot ï¿½ la fin
          * Thread-safe
          */
         public synchronized void append(String word, Color c) {

@@ -1,4 +1,4 @@
-import java.awt.Color;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,14 +9,15 @@ public class EventDispatcher {
 	private static final int nbCheckers = 3;
 	static volatile boolean go = false; 
 	static volatile boolean playing = false; 
-	// est-ce que l'utilisateur a cliqué sur "Go !"
-	// volatile car c'est dans Writer qu'on l'écrit true 
-	// et on y accède depuis d'autre Thread pour savoir si lancé (depuis Timer dans le while du wait)
+	// est-ce que l'utilisateur a cliquï¿½ sur "Go !"
+	// volatile car c'est dans Writer qu'on l'ï¿½crit true 
+	// et on y accï¿½de depuis d'autre Thread pour savoir si lancï¿½ (depuis Timer dans le while du wait)
 	private static ReentrantLock lock = new ReentrantLock();
 	private static Condition goSignal = lock.newCondition();
 	private static Condition overSignal = lock.newCondition();
 	static LinkedBlockingQueue<Query> queries = new LinkedBlockingQueue<Query>();
 	private static Timer timer;
+	static ArrayList<String> movies = new ArrayList<String>();;
 	
 	public static void clickGo() {
 		lock.lock();
@@ -54,8 +55,18 @@ public class EventDispatcher {
 	
 	
     public static void main(String[] args) throws InterruptedException {  	
-    	System.out.println("the".compareTo("the a"));
         Writer.createAndShowGUI();
+        // Gestion des mots tapés
+        Thread inputManager = new InputManager();
+        inputManager.start();
+        // Enregistrement des films
+        TC.lectureDansFichier("src/movies.txt");
+        String movie;
+        while (!TC.finEntree()) {
+        	movie = TC.lireLigne();
+        	movies.add(movie);
+        }
+
         while (true) { 
 	        timer = new Timer();
 	        Writer.time.setText("0");
@@ -72,13 +83,13 @@ public class EventDispatcher {
         	// on lance le timer
 	        timer.start();
         	
-            // générer les checker
+            // gï¿½nï¿½rer les checker
         	for (int i = 0; i < nbCheckers; i++) {
         		Checker checker = new Checker();
             	checker.start();
         	}
 
-        	// redémarrage d'une partie
+        	// redï¿½marrage d'une partie
         	Writer.score.setText("0");
         	Writer.inputField.setText("");
         	Writer.outputField.setText("");

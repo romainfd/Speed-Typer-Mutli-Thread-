@@ -2,7 +2,6 @@
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
@@ -10,7 +9,6 @@ import javax.net.ssl.HttpsURLConnection;
 public class Checker extends Thread {
     final String app_id = "918d8af1";
     final String app_key = "c1a5df723a97384087fa26e3d24a0a6e";
-    final String app_key_music = "341e630fca7ed5b93ecdb555a0a14f3f";
 	private Query query; 
 	
 	public Checker() {
@@ -34,7 +32,7 @@ public class Checker extends Thread {
 		            	
 			            // read the output from the server
 			            BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-			            
+			            /*
 			            StringBuilder stringBuilder = new StringBuilder();
 			
 			            String line = null;
@@ -42,7 +40,7 @@ public class Checker extends Thread {
 			                stringBuilder.append(line + "\n");
 			            }
 			            System.out.println(stringBuilder.toString());
-			            
+			            */
 			            Writer.outputField.write(this.query, Color.GREEN);
 			            try {
 			            	Writer.scoreLock.lock();

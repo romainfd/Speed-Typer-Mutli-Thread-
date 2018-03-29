@@ -1,6 +1,3 @@
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
 import tc.TC;
 
 public class Timer extends Thread {
