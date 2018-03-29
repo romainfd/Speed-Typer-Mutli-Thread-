@@ -55,8 +55,9 @@ public class EventDispatcher {
 	
 	
     public static void main(String[] args) throws InterruptedException {  	
+    	System.out.println(MovieChecker.compareString("inception","A Clockwork Orange"));
         Writer.createAndShowGUI();
-        // Gestion des mots tapés
+        // Gestion des mots tapï¿½s
         Thread inputManager = new InputManager();
         inputManager.start();
         // Enregistrement des films

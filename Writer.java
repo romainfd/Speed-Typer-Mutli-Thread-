@@ -26,7 +26,6 @@ public class Writer extends JPanel implements ActionListener {
     protected static ReentrantLock scoreLock = new ReentrantLock(); // pour modifier le score !
     protected static JTextField time;
     protected static JButton button;
-    ArrayList<String> words = new ArrayList();
 
     public Writer() {
         super(new GridBagLayout());
