@@ -100,7 +100,7 @@ public class Writer extends JPanel implements ActionListener {
         message.setHorizontalAlignment(JTextField.CENTER);
         JLabel labelMessage = new JLabel("Message");
         Border border2 = labelMessage.getBorder();
-        Border margin2 = new EmptyBorder(10,10,10,10);
+        Border margin2 = new EmptyBorder(10,0,10,0);
         labelMessage.setBorder(new CompoundBorder(border2, margin2));
         labelMessage.setLabelFor(message);
         
