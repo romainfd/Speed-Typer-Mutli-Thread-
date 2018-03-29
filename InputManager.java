@@ -6,7 +6,7 @@ public class InputManager extends Thread {
 	
 	static LinkedBlockingQueue<Query> input = new LinkedBlockingQueue<Query>();
 	private Query newQuery;
-    ArrayList<String> words = new ArrayList<String>();
+    static ArrayList<String> words = new ArrayList<String>();
 
 	
 	public InputManager(){
@@ -19,6 +19,8 @@ public class InputManager extends Thread {
 			} catch (InterruptedException e) {}
 			EventDispatcher.queries.add(newQuery);
 			words.add(newQuery.word);
+			Thread movieChecker = new MovieChecker(words.size()-1, newQuery);
+			movieChecker.start();
 
 		}
 	}
