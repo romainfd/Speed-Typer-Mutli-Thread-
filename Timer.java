@@ -46,12 +46,15 @@ public class Timer extends Thread {
             if (t - t0 > 300) {
             	try {
 					Thread.sleep(50);
-				} catch (InterruptedException e) { return; }
+				} catch (InterruptedException e) { 
+			        Writer.inputField.setEditable(false);
+					return; 
+				}
             }
             t = System.currentTimeMillis();
         }    
-    	if (Thread.interrupted()) return;
         Writer.inputField.setEditable(false);
+        if (Thread.interrupted()) return;
         
         // on annonce à l'Event Dispatcher que le jeu est terminé
         EventDispatcher.setGo(false);

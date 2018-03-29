@@ -247,7 +247,7 @@ public class Writer extends JPanel implements ActionListener {
             StyleContext sc = StyleContext.getDefaultStyleContext();
             // on r�cup�re les attributs de l'ancien mot (gras ?)
             MutableAttributeSet asNew = new SimpleAttributeSet(getStyledDocument().getCharacterElement(query.pos).getAttributes().copyAttributes());
-            //
+            
 			try {
 				StyleConstants.setForeground(asNew, c);
 				// puis on le met � jour dans l'output (plus gris)
