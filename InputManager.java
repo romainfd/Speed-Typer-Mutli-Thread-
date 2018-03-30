@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,6 +18,7 @@ public class InputManager extends Thread {
 			try {
 				newQuery= input.take();
 			} catch (InterruptedException e) {}
+			Writer.outputField.append(newQuery.word, Color.GRAY);
 			synchronized (words) {
 				words.add(newQuery.word);
 				nb++;

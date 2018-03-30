@@ -20,7 +20,6 @@ public class Checker extends Thread {
 			if (EventDispatcher.playing) {
 				try {
 					this.query = EventDispatcher.queries.take();
-					Writer.outputField.append(this.query.word, Color.GRAY);
 					URL url = new URL(query());
 		            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
 		            urlConnection.setRequestProperty("Accept","application/json");
