@@ -2,7 +2,7 @@ import tc.TC;
 
 public class Timer extends Thread {
 	static long delayStart = 3000;
-	static long duration = 180000;
+	static long duration = 18000;
 	
 
 	public String msToText(long timeMs) {
